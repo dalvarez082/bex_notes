@@ -1,10 +1,15 @@
-import 'package:bex_notes/app/bloc/text_input/class_blocs.dart';
+import 'package:bex_notes/app/global_bloc/text_input/class_blocs.dart';
 import 'package:bex_notes/app/routes/app_routes_names.dart';
+import 'package:bex_notes/core/services/session_service.dart';
 import 'package:bex_notes/core/utils/system_ui_utils.dart';
+import 'package:bex_notes/core/utils/token_utils.dart';
+import 'package:bex_notes/modules/auth/data/datasources/user_local_datasource.dart';
+import 'package:bex_notes/modules/auth/data/repositories/user_repository_impl.dart';
+import 'package:bex_notes/modules/auth/domain/usecases/login_user.dart';
 import 'package:bex_notes/styles/typography/app_responsive_text_extension.dart';
-import 'package:bex_notes/widgets/atoms/button_text.dart';
-import 'package:bex_notes/widgets/molecules/login_continue_button.dart';
-import 'package:bex_notes/widgets/molecules/login_form_fields.dart';
+import 'package:bex_notes/global_widgets/atoms/button_text.dart';
+import 'package:bex_notes/modules/auth/presentation/widget/login_continue_button.dart';
+import 'package:bex_notes/modules/auth/presentation/widget/login_form_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                     spacing: 24.r,
                     children: [
                       Padding(
-                        padding:  EdgeInsets.symmetric(vertical: 24.r),
+                        padding: EdgeInsets.symmetric(vertical: 24.r),
                         child: Text(
                           'Inicia sesión',
                           style: context.textresponsive.displaySmall,
@@ -44,8 +49,51 @@ class LoginScreen extends StatelessWidget {
                       ),
                       const LoginFormFields(),
                       Padding(
-                        padding:  EdgeInsets.symmetric(vertical: 16.r),
-                        child: LoginContinueButton(onPressed: () {}),
+                        padding: EdgeInsets.symmetric(vertical: 16.r),
+                        child: Builder(
+                          builder: (context) {
+                            return LoginContinueButton(
+                              onPressed: () async {
+                                final email =
+                                    context.read<EmailBloc>().state.text;
+                                final password =
+                                    context.read<PasswordBloc>().state.text;
+
+                                final localDataSource = UserLocalDataSource();
+                                final repository = UserRepositoryImpl(
+                                  localDataSource,
+                                );
+                                final loginUser = LoginUser(repository);
+
+                                try {
+                                  final user = await loginUser(email, password);
+                                  final token = generateToken(24);
+                                  await SessionService.saveToken(token);
+                                  await SessionService.saveUserId(user.id!);
+
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Bienvenido, ${user.name}',
+                                        ),
+                                      ),
+                                    );
+                                    context.go(AppRoutesNames.homeScreen);
+                                  }
+                                } catch (e) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Error: ${e.toString()}'),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -53,9 +101,12 @@ class LoginScreen extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 24.r),
-                child: ButtonText(onPressed: () {
-                  context.push(AppRoutesNames.signupScreen);
-                }, text: 'Crear una cuenta'),
+                child: ButtonText(
+                  onPressed: () {
+                    context.push(AppRoutesNames.signupScreen);
+                  },
+                  text: 'Crear una cuenta',
+                ),
               ),
             ],
           ),

@@ -39,6 +39,10 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.7
   auto_size_text: ^3.0.0
+  sqflite: ^2.4.2
+  path: ^1.9.1
+  crypto: ^3.0.6
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

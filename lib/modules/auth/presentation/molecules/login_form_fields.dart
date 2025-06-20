@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:bex_notes/widgets/atoms/text_input_field.dart';
-import 'package:bex_notes/app/bloc/text_input/class_blocs.dart';
+import 'package:bex_notes/global_widgets/atoms/text_input_field.dart';
+import 'package:bex_notes/app/global_bloc/text_input/class_blocs.dart';
 
 class LoginFormFields extends StatelessWidget {
   const LoginFormFields({super.key});

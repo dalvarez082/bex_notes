@@ -1,4 +1,4 @@
-import 'package:bex_notes/app/bloc/text_input/text_input_config.dart';
+import 'package:bex_notes/app/global_bloc/text_input/text_input_config.dart';
 
 class Validation {
   static const email = TextInputConfig(validator: _validateEmail);

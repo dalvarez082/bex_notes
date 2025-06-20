@@ -1,4 +1,4 @@
-import 'package:bex_notes/app/bloc/text_input/text_input_bloc.dart';
+import 'package:bex_notes/app/global_bloc/text_input/text_input_bloc.dart';
 import 'package:bex_notes/core/validators/inputs/validation_input.dart';
 
 class EmailBloc extends TextInputBloc {
