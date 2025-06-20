@@ -3,4 +3,5 @@
   static const String loginScreen = '/LoginScreen';
   static const String signupScreen = '/signup';
   static const String homeScreen = '/home';
+  static const String noteDetailScreen = '/noteDetail';
  }

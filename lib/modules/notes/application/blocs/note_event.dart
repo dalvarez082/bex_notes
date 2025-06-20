@@ -11,3 +11,17 @@ class AddNoteEvent extends NoteEvent {
   final Note note;
   AddNoteEvent(this.note);
 }
+
+
+class DeleteNoteEvent extends NoteEvent {
+  final int noteId;
+  final int userId;
+
+  DeleteNoteEvent(this.noteId, this.userId);
+}
+
+
+class UpdateNoteEvent extends NoteEvent {
+  final Note note;
+  UpdateNoteEvent(this.note);
+}
