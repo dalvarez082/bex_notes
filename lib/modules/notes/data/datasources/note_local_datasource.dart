@@ -18,4 +18,20 @@ class NoteLocalDataSource {
     );
     return result.map((e) => NoteModel.fromMap(e)).toList();
   }
+
+  Future<void> deleteNote(int noteId) async {
+    final db = await DatabaseHelper.instance.database;
+    await db.delete('notes', where: 'note_id = ?', whereArgs: [noteId]);
+  }
+
+
+  Future<void> updateNote(NoteModel note) async {
+  final db = await DatabaseHelper.instance.database;
+  await db.update(
+    'notes',
+    note.toMap(),
+    where: 'note_id = ?',
+    whereArgs: [note.id],
+  );
+}
 }

@@ -37,6 +37,10 @@ class _HomeScreemState extends State<HomeScreem> {
       userId = idResult;
       userName = 'Usuario';
     });
+
+    if (idResult != null && mounted) {
+      context.read<NoteBloc>().add(LoadNotes(idResult));
+    }
   }
 
   void _showUserModal(BuildContext context) {
@@ -55,74 +59,69 @@ class _HomeScreemState extends State<HomeScreem> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    // Si no ha cargado el userId aún, mostramos loader
     if (userId == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return BlocProvider(
-      create: (_) => NoteBloc()..add(LoadNotes(userId!)),
-      child: Builder(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            backgroundColor: colors.primary,
-            title: Text(
-              'Bex Notes',
-              style: context.textresponsive.titleLarge.copyWith(
-                color: colors.onPrimary,
-              ),
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.account_circle_outlined, color: colors.onPrimary),
-                onPressed: () => _showUserModal(context),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: colors.primary,
+        title: Text(
+          'Bex Notes',
+          style: context.textresponsive.titleLarge.copyWith(
+            color: colors.onPrimary,
           ),
-          body: BlocBuilder<NoteBloc, NoteState>(
-            builder: (context, state) {
-              if (state is NoteLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is NoteLoaded) {
-                return NoteGrid(notes: state.notes);
-              } else if (state is NoteError) {
-                return Center(child: Text('Error: ${state.message}'));
-              }
-              return const SizedBox.shrink();
-            },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle_outlined, color: colors.onPrimary),
+            onPressed: () => _showUserModal(context),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              final bloc = context.read<NoteBloc>();
+        ],
+      ),
+      body: BlocBuilder<NoteBloc, NoteState>(
+        builder: (context, state) {
+          if (state is NoteLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is NoteLoaded) {
+            return NoteGrid(notes: state.notes);
+          } else if (state is NoteError) {
+            return Center(child: Text('Error: ${state.message}'));
+          }
+          return const SizedBox.shrink();
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final bloc = context.read<NoteBloc>();
 
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                builder: (modalContext) {
-                  return CreateNoteModal(
-                    onSave: (title, content) {
-                      bloc.add(
-                        AddNoteEvent(
-                          Note(
-                            userId: userId!,
-                            title: title,
-                            content: content,
-                            createdAt: DateTime.now(),
-                          ),
-                        ),
-                      );
-                    },
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            builder: (modalContext) {
+              return CreateNoteModal(
+                onSave: (title, content) {
+                  bloc.add(
+                    AddNoteEvent(
+                      Note(
+                        userId: userId!,
+                        title: title,
+                        content: content,
+                        createdAt: DateTime.now(),
+                      ),
+                    ),
                   );
                 },
               );
             },
-            child: const Icon(Icons.add),
-          ),
-        ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
+
