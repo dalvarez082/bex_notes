@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bex_notes/app/bloc/text_input/text_input_bloc.dart';
-import 'package:bex_notes/app/bloc/text_input/text_input_event.dart';
-import 'package:bex_notes/app/bloc/text_input/text_input_state.dart';
+import 'package:bex_notes/app/global_bloc/text_input/text_input_bloc.dart';
+import 'package:bex_notes/app/global_bloc/text_input/text_input_event.dart';
+import 'package:bex_notes/app/global_bloc/text_input/text_input_state.dart';
 
 class TextInputField<B extends TextInputBloc> extends StatefulWidget {
   final String label;

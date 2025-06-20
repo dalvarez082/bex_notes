@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bex_notes/widgets/atoms/button_filled.dart';
-import 'package:bex_notes/app/bloc/text_input/class_blocs.dart';
+import 'package:bex_notes/global_widgets/atoms/button_filled.dart';
+import 'package:bex_notes/app/global_bloc/text_input/class_blocs.dart';
 
 class LoginContinueButton extends StatelessWidget {
   final VoidCallback onPressed;
